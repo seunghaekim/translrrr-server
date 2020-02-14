@@ -1,11 +1,14 @@
-from dotenv import load_dotenv
 import os, sys
 import requests
-from .utils import Language
-from .utils import BaseRequestData
-from .utils import BaseResponseData
-from .utils import BaseRequest
+from translator.utils import Language
+from translator.vendors.base_request_data import BaseRequestData
+from translator.vendors.base_response_data import BaseResponseData
+from translator.vendors.base_request import BaseRequest
+from translator.vendors.base_vendor_data import BaseVendorData
 import urllib
+import itertools
+
+VENDOR = BaseVendorData(key="kakao")
 
 KAKAO_APP_KEY = os.getenv('KAKAO_APP_KEY')
 
@@ -21,8 +24,8 @@ class RequestData(BaseRequestData):
 
     def to_dict(self):
         return {
-            'target_lang': self.target_language,
-            'src_lang': self.source_language,
+            'target_lang': KAKAO_LANGUAGE[self.target_language],
+            'src_lang': KAKAO_LANGUAGE[self.source_language],
             'query': self.contents,
         }
 
@@ -32,10 +35,14 @@ class ResponseData(BaseResponseData):
 
     def to_dict(self):
         return {
+            'vendor': VENDOR.key,
             'result': self.result,
-            'translated_text': self.translated_text,
+            'translated_text': self.get_translated_text(),
             'messsage': self.msg,
         }
+
+    def get_translated_text(self):
+        return " ".join(list(itertools.chain.from_iterable(self.translated_text)))
 
 
 class KakaoRequests(BaseRequest):
@@ -49,27 +56,14 @@ class KakaoRequests(BaseRequest):
     data = RequestData
     request_data_handler = RequestData
     response_data_handler = ResponseData
+    vendor = VENDOR
 
 
     def valid_data(self):
         if self.data.target_language not in self.accepted_lang:
             raise ValueError(f'{self.data.target_language} is not in accepted_lang')
-        else:
-            self.data.target_language = self.accepted_lang[self.data.target_language]
 
         if self.data.source_language not in self.accepted_lang:
             raise ValueError(f'{self.data.source_language} is not in accepted_lang')
-        else:
-            self.data.source_language = self.accepted_lang[self.data.source_language]
 
         return self.data.to_dict()
-
-
-if __name__ == "__main__":
-    kakao = KakaoRequests()
-    kakao.set_data(
-        target_language='en',
-        source_language='ko',
-        contents='hahahah')
-    response = kakao.request_translate()
-    print(response)

@@ -4,12 +4,19 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 flask = "*"
 flask-cors = "*"
 flask-restful = "*"
 requests = "*"
+django = "*"
+django-admin = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+django-extensions = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"

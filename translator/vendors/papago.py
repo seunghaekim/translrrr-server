@@ -1,11 +1,14 @@
 from dotenv import load_dotenv
 import os, sys
 import requests
-from .utils import Language
-from .utils import BaseRequestData
-from .utils import BaseResponseData
-from .utils import BaseRequest
+from translator.utils import Language
+from translator.vendors.base_response_data import BaseResponseData
+from translator.vendors.base_request import BaseRequest
+from translator.vendors.base_request_data import BaseRequestData
+from translator.vendors.base_vendor_data import BaseVendorData
 import urllib
+
+VENDOR = BaseVendorData(key='papago')
 
 PAPAGO_CLIENT_ID = os.getenv('PAPAGO_CLIENT_ID')
 PAPAGO_CLIENT_SECRET = os.getenv('PAPAGO_CLIENT_SECRET')
@@ -33,6 +36,7 @@ class ResponseData(BaseResponseData):
 
     def to_dict(self):
         return {
+            'vendor': VENDOR.key,
             'result': self.result,
             'translated_text': self.translated_text,
             'message': self.message
@@ -51,7 +55,7 @@ class PapagoRequests(BaseRequest):
     data = RequestData
     request_data_handler = RequestData
     response_data_handler = ResponseData
-
+    vendor = VENDOR
 
     def valid_data(self):
         if self.data.target_language not in self.accepted_lang:
@@ -86,14 +90,6 @@ class PapagoRequests(BaseRequest):
         else:
             response_data['translated_text'] = json['message']['result']['translatedText']
 
-        return self.response_data_handler(**response_data)
-
-
-if __name__ == "__main__":
-    papago = PapagoRequests()
-    papago.set_data(
-        target_language='en',
-        source_language='ko',
-        contents='hahahah')
-    response = papago.request_translate()
-    print(response)
+        responsedata_obj = self.response_data_handler(**response_data)
+        self.save_cache(responsedata_obj)
+        return responsedata_obj

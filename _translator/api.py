@@ -30,12 +30,12 @@ class Translator(Resource):
 
     def post(self):
         params = self.params()
-        result = {}
+        result = []
         for key in self.translators:
             translator = self.translators[key]()
             translator.set_data(**params)
             response = translator.request_translate()
-            result[key] = response.to_dict()
+            result.append(response.to_dict())
 
         return {
             'status': 'succes',
