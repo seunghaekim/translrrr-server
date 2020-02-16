@@ -46,8 +46,6 @@ RUN set -ex \
 RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
-RUN chmod 777 -R /code/uploads
-RUN chmod 777 -R /code/logs
 
 # uWSGI will listen on this port
 EXPOSE 8000

@@ -7,9 +7,6 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-flask = "*"
-flask-cors = "*"
-flask-restful = "*"
 requests = "*"
 django = "*"
 django-admin = "*"
@@ -17,6 +14,9 @@ djangorestframework = "*"
 django-cors-headers = "*"
 django-extensions = "*"
 psycopg2-binary = "*"
+dj-database-url = "*"
+python-dotenv = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.7"
