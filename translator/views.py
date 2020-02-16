@@ -23,7 +23,12 @@ class TranslatorView(APIView):
         }
 
         for key in ['source_language', 'target_language', 'contents']:
-            if params[key] is None:
+            if params[key] is not None:
+                continue
+
+            if key in request.data:
+                params[key] = request.data[key]
+            else:
                 return Response({
                     'status': False,
                     'message': f'Request Parameter: {key} is required'
@@ -41,7 +46,9 @@ class TranslatorView(APIView):
             translator = self.__translators[key]()
             translator.set_data(**params)
             response = translator.translate()
-            result.append(response.to_dict())
+            data = response.to_dict()
+            data['vendor'] = key
+            result.append(data)
 
         return Response({
             'status': 'success',

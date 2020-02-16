@@ -58,6 +58,9 @@ def get_contents_cache_obj(**kwargs):
         contentscache = ContentsCache.objects.filter(**filter_kwargs).get()
     except ContentsCache.DoesNotExist:
         return False
+    except ContentsCache.MultipleObjectsReturned:
+        ContentsCache.objects.filter(**filter_kwargs).delete()
+        return False
     return contentscache
 
 
