@@ -91,5 +91,6 @@ class PapagoRequests(BaseRequest):
             response_data['translated_text'] = json['message']['result']['translatedText']
 
         responsedata_obj = self.response_data_handler(**response_data)
-        self.save_cache(responsedata_obj)
+        if response_data['result'] is True:
+            self.save_cache(responsedata_obj)
         return responsedata_obj

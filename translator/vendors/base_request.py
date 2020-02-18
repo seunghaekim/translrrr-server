@@ -59,7 +59,8 @@ class BaseRequest:
 
         contentscache_obj = service.get_contents_cache(**data)
         if contentscache_obj is False:
-            print(data)
+            return False
+        if contentscache_obj.translated_text == '':
             return False
 
         return contentscache_obj
@@ -88,7 +89,8 @@ class BaseRequest:
             response_data['translated_text'] = json['translated_text']
 
         responsedata_obj = self.response_data_handler(**response_data)
-        self.save_cache(responsedata_obj)
+        if response_data['result'] is True:
+            self.save_cache(responsedata_obj)
         return responsedata_obj
 
     def save_cache(self, responsedata_obj):
