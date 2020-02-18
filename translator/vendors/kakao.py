@@ -7,6 +7,9 @@ from translator.vendors.base_request import BaseRequest
 from translator.vendors.base_vendor_data import BaseVendorData
 import urllib
 import itertools
+from dotenv import load_dotenv
+
+load_dotenv()
 
 VENDOR = BaseVendorData(key="kakao")
 
