@@ -7,6 +7,8 @@ SITE_DOMAIN = 'http://app.translrrr.gtszoffice.com'
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'translrrr.gtszoffice.com',
+    'app.translrrr.gtszoffice.com'
 ]
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)  # noqa: F405
 CORS_ORIGIN_WHITELIST = [
