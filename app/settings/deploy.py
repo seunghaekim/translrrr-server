@@ -9,6 +9,10 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)  # noqa: F405
+CORS_ORIGIN_WHITELIST = [
+    'http://app.translrrr.gtszoffice.com',
+    'http://translrrr.gtszoffice.com'
+]
 
 LOGGING = {
     'version': 1,
